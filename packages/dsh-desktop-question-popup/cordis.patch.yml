@@ -1,0 +1,18 @@
+# dsh-desktop-question-popup bundle patch.
+#
+# One host-plane row: the popup window, its loopback server, and the shadowed
+# timed ask_user_question all live in this plugin. Nothing under an agent preset
+# is touched, so no preset / tool-ask-user config override is needed.
+#
+# Install with `plugin_manager install_bundle` (the first install takes effect
+# immediately). For local development, add a `file://` row pointing at
+# lib/index.js in your own DSH profile patch instead (see README.md).
+- insert:
+    - id: desktop-question-popup
+      name: "@layman-hu/dsh-desktop-question-popup"
+      config:
+        timeout: 120
+        width: 460
+        minHeight: 240
+        maxHeight: 620
+        margin: 12

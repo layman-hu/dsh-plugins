@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="dsh-token" content="__DSH_TOKEN__">
+  <meta name="color-scheme" content="dark">
+  <title>DSH · 需要你的选择</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="eyebrow">DSH · 需要你的选择</span>
+    <span class="timer" id="timer" hidden></span>
+    <button class="close" id="close" type="button" title="关闭（Esc，不产生答案）" aria-label="关闭">×</button>
+  </header>
+
+  <main class="root" id="root">
+    <p class="empty" id="empty">等待提问…</p>
+  </main>
+
+  <footer class="footer" id="footer" hidden>
+    <span class="hint" id="hint">1-9 选择 · Enter 提交 · Esc 关闭</span>
+    <span class="spacer"></span>
+    <button class="btn ghost" id="skip" type="button">跳过</button>
+    <button class="btn primary" id="submit" type="button" disabled>提交</button>
+  </footer>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

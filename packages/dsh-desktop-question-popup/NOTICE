@@ -1,0 +1,55 @@
+# NOTICE
+
+This repository is MIT licensed (see `LICENSE`). It contains material derived
+from MIT-licensed DeepSeek Harness packages. Their notices are reproduced below.
+
+## 1. Format-1 plugin market index validator
+
+`scripts/lib/market-index-validator.mjs` is a verbatim copy of
+`lib/index.js` from the package `@deepseek-ai/dsh-plugin-market-index`
+(MIT, Copyright (c) DeepSeek), distributed with DeepSeek Harness. The only
+change is the `semver` import: this repository points it at
+`scripts/lib/semver-lite.mjs`, a local implementation of the two functions the
+validator uses (`validRange`, `rcompare`), so no `semver` dependency is needed.
+
+## 2. Model-facing `ask_user_question` schema
+
+`packages/dsh-desktop-question-popup/lib/shadow-tool.js` reproduces the
+model-facing contract of the timed `ask_user_question` tool from
+`@deepseek-ai/dsh-tool-ask-user` (MIT, Copyright (c) DeepSeek), distributed with
+DeepSeek Harness: the tool `description`, the `parameters` JSON Schema (including
+the `timeout` parameter text and the `-1` wording), the output `oneOf` schema,
+and the pending-result notice are copied field by field so the model sees the
+same contract as DSH's own timed mode.
+
+## MIT license text (applies to both notices above)
+
+```
+MIT License
+
+Copyright (c) DeepSeek
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Trademarks
+
+DeepSeek, DeepSeek Harness, DSH, Microsoft Edge, Windows, and npm are trademarks
+or product names of their respective owners. This repository is not affiliated
+with or endorsed by DeepSeek.

@@ -1,0 +1,89 @@
+{
+  "name": "dsh-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plugin monorepo for DeepSeek Harness: npm-installable bundles plus a format-1 plugin market index.",
+  "license": "MIT",
+  "author": "layman-hu",
+  "type": "module",
+  "homepage": "https://github.com/layman-hu/dsh-plugins#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/layman-hu/dsh-plugins.git"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "sentinel": "node scripts/sentinel.mjs",
+    "index": "node scripts/make-index.mjs",
+    "index:check": "node scripts/make-index.mjs --check",
+    "validate": "node scripts/validate-index.mjs",
+    "check": "npm run sentinel && npm run test && npm run validate"
+  },
+  "dsh": {
+    "marketIndex": {
+      "title": {
+        "en": "layman-hu DSH plugins",
+        "zh": "layman-hu DSH 插件"
+      },
+      "description": {
+        "en": "Bundles for DeepSeek Harness maintained by layman-hu.",
+        "zh": "layman-hu 维护的 DeepSeek Harness 插件集合。"
+      },
+      "categories": {
+        "desktop": {
+          "title": {
+            "en": "Desktop",
+            "zh": "桌面"
+          }
+        },
+        "integration": {
+          "title": {
+            "en": "Integration",
+            "zh": "集成"
+          }
+        },
+        "interaction": {
+          "title": {
+            "en": "Interaction",
+            "zh": "交互"
+          }
+        }
+      },
+      "labels": {
+        "popup": {
+          "title": {
+            "en": "Popup",
+            "zh": "弹窗"
+          }
+        },
+        "questions": {
+          "title": {
+            "en": "Questions",
+            "zh": "提问"
+          }
+        },
+        "windows": {
+          "title": {
+            "en": "Windows",
+            "zh": "Windows"
+          }
+        }
+      },
+      "sortKeys": {
+        "featured": {
+          "title": {
+            "en": "Featured",
+            "zh": "推荐"
+          },
+          "order": "asc"
+        }
+      }
+    }
+  }
+}

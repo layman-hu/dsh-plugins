@@ -1,0 +1,114 @@
+{
+  "format": 1,
+  "title": {
+    "en": "layman-hu DSH plugins",
+    "zh": "layman-hu DSH 插件"
+  },
+  "description": {
+    "en": "Bundles for DeepSeek Harness maintained by layman-hu.",
+    "zh": "layman-hu 维护的 DeepSeek Harness 插件集合。"
+  },
+  "metadata": {
+    "categories": {
+      "desktop": {
+        "title": {
+          "en": "Desktop",
+          "zh": "桌面"
+        }
+      },
+      "integration": {
+        "title": {
+          "en": "Integration",
+          "zh": "集成"
+        }
+      },
+      "interaction": {
+        "title": {
+          "en": "Interaction",
+          "zh": "交互"
+        }
+      }
+    },
+    "labels": {
+      "popup": {
+        "title": {
+          "en": "Popup",
+          "zh": "弹窗"
+        }
+      },
+      "questions": {
+        "title": {
+          "en": "Questions",
+          "zh": "提问"
+        }
+      },
+      "windows": {
+        "title": {
+          "en": "Windows",
+          "zh": "Windows"
+        }
+      }
+    },
+    "sortKeys": {
+      "featured": {
+        "title": {
+          "en": "Featured",
+          "zh": "推荐"
+        },
+        "order": "asc"
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "@layman-hu/dsh-desktop-question-popup",
+      "title": {
+        "en": "Desktop question popup",
+        "zh": "桌面提问弹窗"
+      },
+      "description": {
+        "en": "Mirrors DSH ask_user_question in a bottom-right always-on-top window; answering on either side ends the other.",
+        "zh": "在屏幕右下角置顶窗口同步显示 DSH 的提问；任一方作答，另一方立即结束。"
+      },
+      "icon": "./packages/dsh-desktop-question-popup/icon.svg",
+      "author": "layman-hu",
+      "homepage": "https://github.com/layman-hu/dsh-plugins#readme",
+      "repository": {
+        "url": "https://github.com/layman-hu/dsh-plugins",
+        "directory": "packages/dsh-desktop-question-popup"
+      },
+      "metadata": {
+        "category": "desktop",
+        "keywords": [
+          "dsh",
+          "deepseek-harness",
+          "dsh-plugin",
+          "ask-user-question",
+          "desktop",
+          "popup",
+          "windows"
+        ],
+        "labels": [
+          "popup",
+          "questions",
+          "windows"
+        ]
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1794009600,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/layman-hu/dsh-plugins",
+            "commit": "0000000000000000000000000000000000000000",
+            "path": "packages/dsh-desktop-question-popup"
+          },
+          "engines": {
+            "dsh": ">=0.2.2-rc.1 <0.3.0"
+          }
+        }
+      ]
+    }
+  ]
+}

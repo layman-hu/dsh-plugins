@@ -1,0 +1,76 @@
+{
+  "name": "@layman-hu/dsh-desktop-question-popup",
+  "version": "0.1.0",
+  "description": "Windows desktop popup that mirrors DSH ask_user_question in a bottom-right always-on-top window; whichever side answers first ends the other.",
+  "type": "module",
+  "license": "MIT",
+  "author": "layman-hu",
+  "homepage": "https://github.com/layman-hu/dsh-plugins#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/layman-hu/dsh-plugins.git",
+    "directory": "packages/dsh-desktop-question-popup"
+  },
+  "bugs": {
+    "url": "https://github.com/layman-hu/dsh-plugins/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "ask-user-question",
+    "desktop",
+    "popup",
+    "windows"
+  ],
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "lib/",
+    "ui/",
+    "locale/",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml"
+      ],
+      "platforms": [
+        "win32"
+      ]
+    },
+    "market": {
+      "category": "desktop",
+      "labels": [
+        "popup",
+        "questions",
+        "windows"
+      ],
+      "title": {
+        "en": "Desktop question popup",
+        "zh": "桌面提问弹窗"
+      },
+      "description": {
+        "en": "Mirrors DSH ask_user_question in a bottom-right always-on-top window; answering on either side ends the other.",
+        "zh": "在屏幕右下角置顶窗口同步显示 DSH 的提问；任一方作答，另一方立即结束。"
+      }
+    }
+  }
+}

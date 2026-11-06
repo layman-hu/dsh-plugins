@@ -1,0 +1,5 @@
+{
+  "id": "desktop-question-popup",
+  "name": "桌面提问弹窗",
+  "description": "DSH 需要用户选择时，在 Windows 桌面右下角同步弹出同样的问题；任一方作答，另一方立即结束。"
+}

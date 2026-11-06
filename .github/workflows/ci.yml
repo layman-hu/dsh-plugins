@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Import sentinel (host halves import only node:* and relative modules)
+        run: node scripts/sentinel.mjs
+
+      - name: Offline tests
+        run: npm test
+
+      - name: Validate plugin market index
+        run: node scripts/validate-index.mjs
+
+      # The committed index.json is pinned to a real commit only after the first
+      # push (see AGENTS.md §5). Until then this stays non-blocking; make it
+      # blocking once the repository has been published.
+      - name: Index pinned to HEAD (informational until first publish)
+        continue-on-error: true
+        run: node scripts/make-index.mjs --check

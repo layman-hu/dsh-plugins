@@ -1,0 +1,5 @@
+{
+  "id": "desktop-question-popup",
+  "name": "Desktop question popup",
+  "description": "Mirrors DSH user questions in a Windows bottom-right window; whichever side answers first ends the other."
+}
