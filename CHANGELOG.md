@@ -26,3 +26,15 @@ First public snapshot of the monorepo (not yet published to npm).
   discover as a silent load failure).
 - `docs/DESIGN.md` — mechanism, upstream source references, and the runtime
   pitfalls this plugin had to work around.
+
+### Fixed
+
+- `scripts/make-index.mjs --check` no longer reports "stale" forever after
+  `index.json` is committed: it now compares the index against the current
+  package manifests (ignoring each version's pinned `source.commit`) and instead
+  verifies that every pinned commit really contains the indexed package version.
+  Generation also derives `publishTimestamp` from the pinned commit's commit time
+  by default, so regenerating the same commit is deterministic.
+- Added `scripts/index-check.test.mjs`, an offline fixture suite (throwaway git
+  repositories) that covers the commit-then-check flow, version drift, a missing
+  pinned commit, and an invalid `publishTimestamp`; CI runs it.

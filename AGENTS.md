@@ -88,9 +88,29 @@ minimal and self-contained: rows the bundle owns, not edits to other bundles.
 - `index.json` is produced by `node scripts/make-index.mjs`. Never hand-edit it.
 - Every version is pinned to a **40-hex commit** (git source) so an install is
   reproducible. The script reads `git rev-parse HEAD`; `--commit <sha>` exists
-  only for offline builds before the first push.
-- `node scripts/make-index.mjs --check` reports staleness (CI runs it once the
-  repository is actually pushed and `index.json` is pinned to a real commit).
+  only for offline builds.
+- Generation is deterministic: plugins/versions are sorted and, unless
+  `--timestamp` is passed, a version's `publishTimestamp` is its pinned commit's
+  commit time — the same commit always produces the same index.
+- `node scripts/make-index.mjs --check` is the CI gate. It verifies two separate
+  things and **never compares against HEAD**:
+  1. the committed index matches the current package manifests — names,
+     versions, titles/descriptions, icon/source URL+path, `engines`, and the
+     format rule for `publishTimestamp`; the per-version `source.commit` is
+     intentionally excluded from that comparison;
+  2. every pinned `source.commit` really contains
+     `<path>/package.json` with the indexed name and version
+     (`git cat-file -e <commit>:<path>/package.json`), i.e. the entry is
+     installable.
+  This matters because committing `index.json` moves HEAD to a new commit while
+  the index keeps pinning the release commit — an equality check against HEAD
+  would report "stale" forever. `node scripts/index-check.test.mjs` covers the
+  behaviour offline with throwaway git repositories.
+- **CI must check out the full history.** Verifying a pinned commit reads that
+  object from the local repository, so a shallow checkout lacks it: the workflow
+  uses `actions/checkout@v4` with `fetch-depth: 0`. A `--check` failure that says
+  a pinned commit "does not contain" the package.json is usually a shallow
+  checkout (`git fetch --unshallow` fixes it).
 - After the first `git init` + commit: run `npm run index`, commit the result;
   from then on every commit that changes a package manifest needs a fresh
   `npm run index`.
@@ -120,19 +140,26 @@ expected. Everything else under the repository must stay free of local paths.
 
 ```powershell
 npm run sentinel        # import sentinel for every package host half
-npm test                # all package tests (node --test at the root)
+npm test                # all tests (node --test at the root; includes scripts/index-check.test.mjs)
 npm run validate        # validate index.json with the vendored validator
 npm run index           # regenerate index.json from git HEAD
+npm run index:check     # index matches manifests + pinned commits contain the versions
 npm run check           # sentinel + test + validate
 ```
+
+For the index gate specifically: `npm run index:check` is safe to run after
+committing `index.json`, and `node scripts/index-check.test.mjs` exercises the
+offline fixtures (pass / version drift / missing pinned commit).
 
 ## 8. Release flow
 
 1. Bump the package `version` and add a `CHANGELOG.md` entry.
 2. `npm run check`.
-3. Commit; run `npm run index`; commit `index.json` (pinned to the new HEAD).
-4. Push. Users can now add the raw index URL in DSH Discover/Settings, or
-   install with the `git+https://…#<commit>&path:/packages/<name>` spec.
+3. Commit; run `npm run index`; commit `index.json` (pinned to the release
+   commit). Then `npm run index:check` must pass — HEAD is now the index commit,
+   which the check expects.
+4. Push. Users can now add the index URL in DSH Discover/Settings, or install
+   with the `git+https://…#<commit>&path:/packages/<name>` spec.
 5. Optional npm path: `npm publish --access public` from the package directory,
    then `node scripts/make-index.mjs --npm` and commit the refreshed index.
 

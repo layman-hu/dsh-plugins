@@ -19,11 +19,12 @@
   ],
   "scripts": {
     "test": "node --test",
+    "test:index-check": "node --test scripts/index-check.test.mjs",
     "sentinel": "node scripts/sentinel.mjs",
     "index": "node scripts/make-index.mjs",
     "index:check": "node scripts/make-index.mjs --check",
     "validate": "node scripts/validate-index.mjs",
-    "check": "npm run sentinel && npm run test && npm run validate"
+    "check": "npm run sentinel && npm test && npm run validate && npm run index:check"
   },
   "dsh": {
     "marketIndex": {

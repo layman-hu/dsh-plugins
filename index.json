@@ -97,11 +97,11 @@
       "versions": [
         {
           "version": "0.1.0",
-          "publishTimestamp": 1794009600,
+          "publishTimestamp": 1793982239,
           "source": {
             "type": "git",
             "url": "https://github.com/layman-hu/dsh-plugins",
-            "commit": "0000000000000000000000000000000000000000",
+            "commit": "d02dfa5b1b99108d4b3db344bad5aae916b58c98",
             "path": "packages/dsh-desktop-question-popup"
           },
           "engines": {

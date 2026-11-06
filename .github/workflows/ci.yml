@@ -10,6 +10,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Full history: `make-index --check` verifies that each index entry's
+          # pinned release commit still contains its package.json. Committing
+          # index.json moves HEAD past that release commit, so a shallow (default
+          # depth=1) checkout would not have the pinned commit object and the
+          # check would fail with "pinned commit ... does not contain ...".
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -22,12 +29,15 @@ jobs:
       - name: Offline tests
         run: npm test
 
+      - name: Index check self-test (throwaway git repositories)
+        run: node --test scripts/index-check.test.mjs
+
       - name: Validate plugin market index
         run: node scripts/validate-index.mjs
 
-      # The committed index.json is pinned to a real commit only after the first
-      # push (see AGENTS.md §5). Until then this stays non-blocking; make it
-      # blocking once the repository has been published.
-      - name: Index pinned to HEAD (informational until first publish)
-        continue-on-error: true
+      # Verifies the committed index matches the package manifests and that every
+      # pinned commit really contains its indexed package version. It does NOT
+      # compare against HEAD: committing index.json legitimately moves HEAD past
+      # the release commit the index pins.
+      - name: Index consistent with manifests and pinned commits
         run: node scripts/make-index.mjs --check

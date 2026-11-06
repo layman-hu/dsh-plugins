@@ -77,11 +77,12 @@ plugin_manager install_bundle  target=@layman-hu/dsh-desktop-question-popup@0.1.
 Both paths mount the package's `cordis.patch.yml`; no agent preset or
 `tool-ask-user` row is edited.
 
-> **Before the first push:** `index.json` in this working copy pins the
-> all-zero placeholder commit (`000…000`), because a commit hash only exists
-> after the repository is pushed. Once pushed, run
-> `node scripts/make-index.mjs` and commit the refreshed `index.json`; the index
-> and the git install spec then carry the real HEAD commit.
+> **What the index pins:** `index.json` pins the commit that produced the
+> released package, not `HEAD`. After the repository was first pushed, run
+> `node scripts/make-index.mjs` and commit the refreshed `index.json`. Any later
+> change to a package manifest (including an npm-scope rename) needs the same two
+> steps: commit the change, regenerate the index, commit the index again —
+> `npm run index:check` verifies that pair and the pinned commit's contents.
 
 ## Configuration
 
@@ -169,11 +170,19 @@ packages/<name>/      publishable DSH bundle (lib/, ui/, locale/, tests/, tools/
 
 ```powershell
 npm run sentinel        # import sentinel for every package host half
-npm test                # all package tests (node --test at the root)
+npm test                # all tests (node --test at the root, fixtures included)
 npm run validate        # validate index.json with the vendored validator
 npm run index           # regenerate index.json from git HEAD
-npm run check           # sentinel + tests + index validation
+npm run index:check     # index matches manifests + pinned commits contain versions
+npm run check           # sentinel + tests + validate + index:check
 ```
+
+`npm run index:check` is the CI gate: it compares the committed index with the
+current package manifests (ignoring each version's pinned commit) and verifies
+that every pinned commit really contains the indexed package version. It does
+**not** compare against HEAD, so it still passes after you commit `index.json`
+(HEAD then points at the index commit while the index keeps pinning the release
+commit). `node scripts/index-check.test.mjs` exercises that behaviour offline.
 
 Node 24 discovers `**/*.test.mjs`; do not pass a directory to `node --test`.
 
@@ -192,7 +201,8 @@ Node 24 discovers `**/*.test.mjs`; do not pass a directory to `node --test`.
 
 See `AGENTS.md` §8. In short: bump version → add a `CHANGELOG.md` entry →
 `npm run check` → commit → `npm run index` and commit `index.json` (pinned to the
-new HEAD) → push. Optional npm publish, then regenerate the index with `--npm`.
+release commit) → `npm run index:check` must pass → push. Optional npm publish,
+then regenerate the index with `--npm`.
 
 ## License and attribution
 
@@ -273,10 +283,11 @@ plugin_manager install_bundle  target=@layman-hu/dsh-desktop-question-popup@0.1.
 两种方式都会挂载该包的 `cordis.patch.yml`，**不会**修改 agent preset 或
 `tool-ask-user` 行。
 
-> **首次 push 之前**：当前工作副本里的 `index.json` 钉的是全 0 占位 commit
-> （`000…000`），因为真实 commit 只有 push 之后才存在。仓库 push 后请运行
-> `node scripts/make-index.mjs` 并把刷新后的 `index.json` 一起提交；此后索引与
-> git 安装 spec 都会带上真实的 HEAD commit。
+> **索引钉的是发布 commit**：`index.json` 固定指向产生该版本包的 commit，而不是
+> `HEAD`。仓库首次 push 之后，请运行 `node scripts/make-index.mjs` 并把刷新后的
+> `index.json` 一并提交。此后任何包清单变更（包括这次 npm scope 改名）都走同样两步：
+> 先提交变更，再重新生成索引并提交索引——`npm run index:check` 会校验两者的对应关系
+> 以及 pinned commit 里的包内容。
 
 ## 配置
 
@@ -358,11 +369,17 @@ packages/<name>/      可发布的 DSH bundle（lib/、ui/、locale/、tests/、
 
 ```powershell
 npm run sentinel        # 对每个包的 host 半做 import 哨兵
-npm test                # 全部包测试（根目录 node --test）
+npm test                # 全部测试（根目录 node --test，含离线 fixture）
 npm run validate        # 用 vendored 校验器校验 index.json
 npm run index           # 从 git HEAD 重新生成 index.json
-npm run check           # 哨兵 + 测试 + 索引校验
+npm run index:check     # 索引与包清单一致 + 每个 pinned commit 含对应版本
+npm run check           # 哨兵 + 测试 + 索引校验 + index:check
 ```
+
+`npm run index:check` 是 CI 门禁：它把已提交索引与当前包清单比较（**忽略** 每个版本的
+pinned commit），并校验每个 pinned commit 里确实含有索引声明的包版本。它**不与 HEAD
+比较**，因此提交 `index.json` 之后（HEAD 变成索引提交、索引仍钉发布提交）依然通过。
+`node scripts/index-check.test.mjs` 用临时 git 仓库离线覆盖该行为。
 
 Node 24 会递归发现 `**/*.test.mjs`；不要把目录参数传给 `node --test`。
 
@@ -379,8 +396,8 @@ Node 24 会递归发现 `**/*.test.mjs`；不要把目录参数传给 `node --te
 ## 发布
 
 见 `AGENTS.md` §8。简言之：升版本 → 补 `CHANGELOG.md` → `npm run check` → 提交 →
-`npm run index` 并把 `index.json` 一并提交（钉在最新 HEAD）→ push。
-可选的 npm 发布路径：发布后用 `--npm` 重新生成索引。
+`npm run index` 并把 `index.json` 一并提交（钉在**发布提交**上）→ `npm run index:check`
+必须通过 → push。可选的 npm 发布路径：发布后用 `--npm` 重新生成索引。
 
 ## 许可与归属
 

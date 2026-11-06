@@ -1,0 +1,15 @@
+# Line endings: store LF in the repository and check out LF on every OS.
+# Without this, Windows' core.autocrlf=true rewrites the working tree to CRLF on
+# the next checkout, producing "LF will be replaced by CRLF" warnings and noisy
+# diffs. Node, PowerShell and Git all handle LF fine on Windows.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.tgz binary
+*.zip binary
